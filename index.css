@@ -1,0 +1,25 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+/* html,body {
+  height: 100%;
+  width: 100%;
+} */
+
+#body-content {
+  height: 92%;
+  padding: 15px 10px;
+  /* position: relative; */
+}
+
+.footer {
+  position: absolute;
+  bottom: 15px;
+  left: 10px;
+}
+
+#test{
+  background-color: aqua;
+}
