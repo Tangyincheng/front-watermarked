@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<style>
+  .dv {
+    height: 100px;
+    width: 100px;
+    border: 1px solid #ccc;
+  }
+
+  .dv #inp {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+  }
+
+  .yulan {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+  }
+</style>
+
+<body>
+  <div class="cun"></div>
+  <div class="dv">
+    添加
+    <input type="file" name="" id="inp" value="">
+  </div>
+  <div class="yulan"></div>
+  <canvas id="myCanvas"></canvas>
+  <script>
+    var dv = document.querySelector(".dv");
+    var inp = document.getElementById("inp");
+    var cun = document.querySelector('.cun');
+    var yulan = document.querySelector(".yulan");
+    inp.onchange = function (e) {
+      console.log(e)
+      let file_length = e.target.files.length;    //选中图片的个数
+      for (let i = 0; i < file_length; i++) {
+        let file = e.target.files[i];
+        let filereader = new FileReader();    //创建FileReader对象
+        filereader.readAsDataURL(file);    //对选中的图片进行base64编码
+        let img = document.createElement("img");    //创建一个img标签来放选中的图片（使用new Image()也可以）
+        filereader.onload = function () {     //当FileReader对象加载完成在执行
+          img.src = filereader.result;     //result是FileReader对象中图片的地址信息
+          img.onload = function () {      //因为异步加载原因，当选中的图片加载完成，开始使用canvas画水印，如果没有这一步，canvas.toDataURL（）方法有可能装换不了base64图片
+            var w = "";    //canvas 未定义宽高，使用选中图片的宽高，方便定义水印的大小
+            var h = "";
+            var quality = "";     // 默认图片质量为0.7
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            if (img.width <= 3000 && img.width > 1000) {       //对选中图片的大小做出判断
+              w = img.width / 3;
+              h = img.height / 3;
+              quality = 0.5;
+              canvas.height = h;
+              canvas.width = w;
+              ctx.drawImage(img, 0, 0, w, h);       //在画布上绘制图像并定义图像的位置
+              ctx.font = "1em microsoft yahei";     //水印的字体
+              ctx.fillStyle = "#fff";     //水印的颜色
+              ctx.fillText('哈哈哈哈', 10, h - 100);      //水印的内容和水印的位置
+              ctx.fillText('我来了', 10, h - 60);
+              ctx.fillText('水印怎么样', 10, h - 20);
+            } else {
+              w = img.width;
+              h = img.height;
+              quality = 1.0;
+              canvas.height = h;
+              canvas.width = w;
+              ctx.drawImage(img, 0, 0, w, h);
+              ctx.font = "1em microsoft yahei";
+              ctx.fillStyle = "#fff";
+              ctx.fillText('我来了', 10, h - 50);
+              ctx.fillText('哈哈哈', 10, h - 30);
+              ctx.fillText('水印怎么样', 10, h - 10);
+            }
+            img.width = 100;
+            img.height = 100;
+            var dataUrl = canvas.toDataURL("image/png")      //通过方法把图片转成base64
+            let img1 = document.createElement("img");      //新创建一个img标签来存放加完水印的图片
+            img1.width = 100;
+            img1.height = 100;
+            img1.src = dataUrl;
+            canvas.style.display = "none";      //canvas中的图片会在下面显示，这里加载完成直接隐藏掉就好，隐藏前可以注释此代码，查看加完水印的效果图
+            cun.appendChild(img1);    //把带水印的图片放进div里
+            //以下是点击预览水印图片
+            img1.onload = function () { //水印图片加载完成执行
+              this.addEventListener("click", function () {     //监听该图片的点击事件
+                var img2 = document.createElement('img');     //创建要预览的img标签
+                img2.src = this.src;     // 赋值该图片的src
+                yulan.style.display = 'block';     //使隐藏的预览盒子显示
+                yulan.innerHTML = "";     //先清空盒子，否则会出现图片累计
+                yulan.appendChild(img2);     //把预览的图片装进盒子
+              })
+
+              yulan.onclick = function () {
+                this.style.display = 'none'; //点击预览的大图，使其隐藏
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

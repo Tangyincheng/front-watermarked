@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <title>yctang-图片水印添加工具</title>
+</head>
+
+<body>
+  <div>
+    <input type="file" placeholder="请选择图片" disabled/>
+    <div id="test"></div>
+  </div>
+
+  <!-- You can also require other files to run in this process -->
+  <script src="./src/index.js"></script>
+  <script src="./renderer.js"></script>
+  
+</body>
+
+</html>
